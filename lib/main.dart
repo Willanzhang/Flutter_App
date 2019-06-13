@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:english_words/english_words.dart';
 import 'secondPage.dart';
+import './pages/index_page.dart';
 
 void main() => runApp(new MyApp());
 
@@ -28,7 +30,8 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.red,
       ),
       // home: new RandomWords(),
-      home: new MyScaffold(),
+      // home: new MyScaffold(),
+      home: new IndexPage(),
     );
   }
 }
@@ -135,7 +138,6 @@ class RandomWordsState extends State<RandomWords> {
 class MyAppBar extends StatelessWidget {
   // 这就是参数
   MyAppBar({this.title});
-
   // Widget子类中的字段往往都会定义为"final"
   
   final Widget title;
