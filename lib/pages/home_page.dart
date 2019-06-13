@@ -4,6 +4,8 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 // 使用字符串转换
 import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+// 拨打号码 email等
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
 	@override
@@ -37,12 +39,15 @@ class _HomePageState extends State<HomePage> {
 						List<Map> swipter = (data['data']['slides'] as List).cast();
 						List<Map> navigatorList = (data['data']['category'] as List).cast();
 						String adPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'].toString();
+						String  leaderImage = data['data']['shopInfo']['leaderImage'];
+						String  leaderPhone = data['data']['shopInfo']['leaderPhone'];
 						// List swipter = [{'image': 'http://images.baixingliangfan.cn/advertesPicture/20190116/20190116173351_2085.jpg', 'goodsId': '6fe4fe0fb5394c0d9b9b4792a827e029'},{'image': 'http://images.baixingliangfan.cn/advertesPicture/20190116/20190116173351_2085.jpg', 'goodsId': '6fe4fe0fb5394c0d9b9b4792a827e029'}];
 						return Column(
 							children: <Widget>[
 								SwiperDiy(swiperDateList:swipter),
 								TopNavigator(navigatorList: navigatorList),
-                AdBanner(advertesPicture: adPicture)
+								AdBanner(advertesPicture: adPicture),
+								LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone,)
 							],
 						);
 					} else {
@@ -129,14 +134,41 @@ class TopNavigator extends StatelessWidget {
 
 // 小广告条（小banner）组件
 class AdBanner extends StatelessWidget {
-  final String advertesPicture;
+	final String advertesPicture;
 
-  AdBanner({Key key, this.advertesPicture}) : super(key: key);
+	AdBanner({Key key, this.advertesPicture}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Image.network(advertesPicture),
-    );
-  }
+	@override
+	Widget build(BuildContext context) {
+		return Container(
+			child: Image.network(advertesPicture),
+		);
+	}
+}
+
+// 店长电话模块  url_launch 拨打号码
+class LeaderPhone extends StatelessWidget {
+	final String leaderImage;
+	final String leaderPhone;
+
+	LeaderPhone({Key key, this.leaderImage, this.leaderPhone}) : super(key: key);
+	@override
+	Widget build(BuildContext context) {
+		return Container(
+			child: InkWell(
+				onTap: launchURL,
+				child: Image.network(leaderImage),
+			),
+		);
+	}
+
+	void launchURL() async {
+		String url = 'tel:' + leaderPhone;
+		print('=================>$url');
+		if (await canLaunch(url)) {
+			await launch(url);
+		} else {
+			throw 'Could not launch $url';
+		}
+	}
 }
