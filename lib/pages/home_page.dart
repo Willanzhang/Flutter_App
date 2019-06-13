@@ -36,11 +36,13 @@ class _HomePageState extends State<HomePage> {
 						var data = json.decode(snapshot.data.toString());
 						List<Map> swipter = (data['data']['slides'] as List).cast();
 						List<Map> navigatorList = (data['data']['category'] as List).cast();
+						String adPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'].toString();
 						// List swipter = [{'image': 'http://images.baixingliangfan.cn/advertesPicture/20190116/20190116173351_2085.jpg', 'goodsId': '6fe4fe0fb5394c0d9b9b4792a827e029'},{'image': 'http://images.baixingliangfan.cn/advertesPicture/20190116/20190116173351_2085.jpg', 'goodsId': '6fe4fe0fb5394c0d9b9b4792a827e029'}];
 						return Column(
 							children: <Widget>[
 								SwiperDiy(swiperDateList:swipter),
-								TopNavigator(navigatorList: navigatorList)
+								TopNavigator(navigatorList: navigatorList),
+                AdBanner(advertesPicture: adPicture)
 							],
 						);
 					} else {
@@ -59,7 +61,7 @@ class _HomePageState extends State<HomePage> {
 class SwiperDiy extends StatelessWidget {
 	final List swiperDateList;
 	// 官方推荐写法  带上key
-	SwiperDiy({Key key, this.swiperDateList}):super(key: key);
+	SwiperDiy({Key key, this.swiperDateList}) : super(key: key);
 
 	@override
 	Widget build(BuildContext context) {
@@ -123,4 +125,18 @@ class TopNavigator extends StatelessWidget {
 			),
 		);
 	}
+}
+
+// 小广告条（小banner）组件
+class AdBanner extends StatelessWidget {
+  final String advertesPicture;
+
+  AdBanner({Key key, this.advertesPicture}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Image.network(advertesPicture),
+    );
+  }
 }
