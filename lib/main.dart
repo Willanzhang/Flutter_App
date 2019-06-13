@@ -144,7 +144,7 @@ class MyAppBar extends StatelessWidget {
     return new Container(
       height: 56.0, // 单位是逻辑上的像素（并非真实的像素，类似于浏览器中的像素）
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      decoration: new BoxDecoration(color: Colors.blue[500]),
+      // decoration: new BoxDecoration(color: Colors.blue[500]),
       // Row 是水平方向的线性布局（linear layout）
       child: new Row(
         //列表项的类型是 <Widget>
@@ -175,6 +175,7 @@ class MyScaffold extends StatelessWidget {
     // Material 是UI呈现的“一张纸”
     return new Material(
       // Column is 垂直方向的线性布局.
+      
       child: new Column(
         children: <Widget>[
           new MyAppBar(
@@ -188,33 +189,58 @@ class MyScaffold extends StatelessWidget {
               child: new Text('Hello, world!'),
             ),
           ),
-          new MyButton()
+          new ButtonRender()
         ],
       ),
     );
   }
 }
 
-// 手势
-class MyButton extends StatelessWidget {
+
+class ButtonRender extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return new MyButton();
+  }
+}
+
+class MyButton extends State<ButtonRender> {
+  void _turnPage () {
+    Navigator.of(context).push(
+      new MaterialPageRoute(
+        builder: (context) {
+
+          return new Scaffold(
+            appBar: new AppBar(
+              title: new Text('Saved Suggestions'),
+            ),
+            body: new Center(
+              child: new Text('hello'),
+            ), 
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // 手势
     return new GestureDetector(
-      onTap: () {
-        print('MyButton was tapped!');
-      },
+      onTap: _turnPage,
       child: new Container(
         height: 36.0,
+        width: 750.0,
         padding: const EdgeInsets.all(8.0),
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         // 装饰
         decoration: new BoxDecoration(
           borderRadius: new BorderRadius.circular(5.0),
           color: Colors.red[500],
+          // color: Theme.of(context).colorScheme.background
         ),
-        child: new Center(
-          child: new Text('Engage'),
-        ),
+        child: new Container(child: new Text('Engage',textAlign: TextAlign.right)),
       ),
     );
   }
