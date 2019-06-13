@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'secondPage.dart';
 
 void main() => runApp(new MyApp());
 
@@ -189,7 +190,8 @@ class MyScaffold extends StatelessWidget {
               child: new Text('Hello, world!'),
             ),
           ),
-          new ButtonRender()
+          new ButtonRender(),
+          new SecondPage()
         ],
       ),
     );
@@ -198,6 +200,8 @@ class MyScaffold extends StatelessWidget {
 
 
 class ButtonRender extends StatefulWidget {
+  ButtonRender({this.key});
+  final GlobalKey key;
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
