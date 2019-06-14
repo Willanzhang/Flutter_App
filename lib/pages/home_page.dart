@@ -52,6 +52,12 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 						String  leaderImage = data['data']['shopInfo']['leaderImage'];
 						String  leaderPhone = data['data']['shopInfo']['leaderPhone'];
 						List<Map> recommendList = (data['data']['recommend'] as List).cast();
+            String floor1Title = data['data']['floor1Pic']['PICTURE_ADDRESS'];
+            List<Map> floor1 = (data['data']['floor1'] as List).cast();
+            String floor2Title = data['data']['floor2Pic']['PICTURE_ADDRESS'];
+            List<Map> floor2 = (data['data']['floor2'] as List).cast();
+            String floor3Title = data['data']['floor3Pic']['PICTURE_ADDRESS'];
+            List<Map> floor3 = (data['data']['floor3'] as List).cast();
 						recommendList += recommendList;
 						// List swipter = [{'image': 'http://images.baixingliangfan.cn/advertesPicture/20190116/20190116173351_2085.jpg', 'goodsId': '6fe4fe0fb5394c0d9b9b4792a827e029'},{'image': 'http://images.baixingliangfan.cn/advertesPicture/20190116/20190116173351_2085.jpg', 'goodsId': '6fe4fe0fb5394c0d9b9b4792a827e029'}];
 						return SingleChildScrollView(
@@ -61,7 +67,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 						  		TopNavigator(navigatorList: navigatorList),
 						  		AdBanner(advertesPicture: adPicture),
 						  		LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
-									Recommend(recommendList: recommendList,)
+									Recommend(recommendList: recommendList),
+                  FloorTitle(pictureAddress: floor1Title),
+                  FloorContext(floorGoodsList: floor1),
+                  FloorTitle(pictureAddress: floor2Title),
+                  FloorContext(floorGoodsList: floor2),
+                  FloorTitle(pictureAddress: floor3Title),
+                  FloorContext(floorGoodsList: floor3),
 						  	],
 						  ),
 						);
@@ -85,12 +97,10 @@ class SwiperDiy extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		// 适配屏幕！！配置设计稿大小
 		// 输出 设备像素密度
-
-		print('设备像素密度：${ScreenUtil.pixelRatio}');
-		print('设备的高：${ScreenUtil.screenHeight}');
-		print('设备像宽：${ScreenUtil.screenWidth}');
+		// print('设备像素密度：${ScreenUtil.pixelRatio}');
+		// print('设备的高：${ScreenUtil.screenHeight}');
+		// print('设备像宽：${ScreenUtil.screenWidth}');
 		return Container(
 			// 使用ScreenUtil转换过的 数值    ScreenUtil().setSp(28, false)  字体大小 
 			height: ScreenUtil().setHeight(333.0),
@@ -192,7 +202,6 @@ class LeaderPhone extends StatelessWidget {
 class Recommend extends StatelessWidget {
 	final List recommendList;
 	Recommend({Key key, this.recommendList}) : super(key: key);
-	
 
 	// 标题方法
 	Widget _titleWidget() {
@@ -215,8 +224,9 @@ class Recommend extends StatelessWidget {
 	// 商品单独项
 	Widget _item(index) {
 		return InkWell(
+			onTap: () {},
 			child: Container(
-				height: ScreenUtil().setHeight(330),
+				height: ScreenUtil().setHeight(360),
 				width: ScreenUtil().setWidth(250),
 				padding: EdgeInsets.all(8.0),
 				decoration: BoxDecoration(
@@ -227,16 +237,21 @@ class Recommend extends StatelessWidget {
 				),
 				child: Column(
 					children: <Widget>[
+            //  height: ScreenUtil().setHeight(200),
 						Image.network(recommendList[index]['image']),
-						Text('￥${recommendList[index]['mallPrice']}'),
+						Text(
+              '￥${recommendList[index]['mallPrice']}',
+              style: TextStyle(
+              ),
+            ),
 						Text(
 							'￥${recommendList[index]['price']}',
 							style: TextStyle(
 								// 下划线
 								decoration: TextDecoration.lineThrough,
-								color: Colors.grey
+								color: Colors.grey,
 							),
-							),
+						),
 					],
 				),
 			),
@@ -246,8 +261,7 @@ class Recommend extends StatelessWidget {
 	// 横向列表！
 	Widget _recommentList() {
 		return Container(
-			height: ScreenUtil().setHeight(330),
-			margin: EdgeInsets.only(top: 10.0),
+			height: ScreenUtil().setHeight(360),
 			child: ListView.builder(
 				scrollDirection: Axis.horizontal,
 				itemCount: recommendList.length,
@@ -261,7 +275,7 @@ class Recommend extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		return Container(
-			height: ScreenUtil().setHeight(380),
+			height: ScreenUtil().setHeight(420),
 			margin: EdgeInsets.only(top: 10.0),
 			child: Column(
 				children: <Widget>[
@@ -271,4 +285,70 @@ class Recommend extends StatelessWidget {
 			),
 		);
 	}
+}
+
+// 楼层标题
+class FloorTitle extends StatelessWidget {
+  final String pictureAddress;
+
+  FloorTitle({Key key, this.pictureAddress}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      child: Image.network(pictureAddress),
+    );
+  }
+}
+
+// 楼层商品列表
+class FloorContext extends StatelessWidget {
+  final List floorGoodsList;
+  FloorContext({Key key, this.floorGoodsList}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          _fitstRow(),
+          _otherGoods()
+        ],
+      ),
+    );
+  }
+
+  Widget _fitstRow() {
+    return Row(
+      children: <Widget>[
+        _goodsItem(floorGoodsList[0]),
+        Column(
+          children: <Widget>[
+            _goodsItem(floorGoodsList[1]),
+            _goodsItem(floorGoodsList[2]),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _otherGoods() {
+    return Row(
+      children: <Widget>[
+        _goodsItem(floorGoodsList[3]),
+        _goodsItem(floorGoodsList[4]),
+      ],
+    );
+  }
+
+  Widget _goodsItem(Map goods) {
+    return new Container(
+      width: ScreenUtil().setWidth(375),
+      child: InkWell(
+        onTap: () {print('店家商品');},
+        child: Image.network(goods['image']),
+      ),
+    );
+  }
 }
