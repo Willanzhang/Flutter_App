@@ -12,11 +12,21 @@ class HomePage extends StatefulWidget {
 	_HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+
+	@override
+	bool get wantKeepAlive => true;
+
+	// @override
+	// void initState() {
+	// 	super.initState();
+	// }
+
 	String homePageContent = '正在获取数据...';
 	
 	@override
 		void initState() {
+			print('11111111111');
 			getHomePageContent().then((val){
 				setState((){
 					homePageContent = val.toString();
@@ -233,7 +243,7 @@ class Recommend extends StatelessWidget {
 		);
 	}
 
-	// 横向列表
+	// 横向列表！
 	Widget _recommentList() {
 		return Container(
 			height: ScreenUtil().setHeight(330),
