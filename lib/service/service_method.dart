@@ -4,8 +4,8 @@ import 'dart:io'; // 要使用io包的一个对象 ContentType
 import '../config/service_url.dart';
 
 
-// 封装 dio
-Future request(String url, formData) async {
+// 封装 dio   {formData}  这样写是参数可选
+Future request(String url, { formData }) async {
   try{
     var c = '123';
     print('开始获取数据...${c}');
@@ -18,7 +18,6 @@ Future request(String url, formData) async {
     } else {
       response = await dio.post(servicePath[url], data: formData);
     }
-    // 经纬度~
     if (response.statusCode == 200) {
       return response.data;
     } else {
