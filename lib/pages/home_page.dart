@@ -37,10 +37,11 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
 	@override
 	Widget build(BuildContext context) {
+    var formData = {'lon': '115.02932', 'lat': '35.73322'};
 		return Scaffold(
 			appBar: AppBar(title: Text('百姓生活+')),
 			body: FutureBuilder(
-				future: getHomePageContent(),
+				future: request('homePageContext', formData),
 				// 异步进行的是时候组件是如何操作的 context snapshot
 				builder: (context, snapshot) {
 					if (snapshot.hasData) {
@@ -74,6 +75,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                   FloorContext(floorGoodsList: floor2),
                   FloorTitle(pictureAddress: floor3Title),
                   FloorContext(floorGoodsList: floor3),
+                  HotGoods(),
 						  	],
 						  ),
 						);
@@ -349,6 +351,29 @@ class FloorContext extends StatelessWidget {
         onTap: () {print('店家商品');},
         child: Image.network(goods['image']),
       ),
+    );
+  }
+}
+
+// 火爆专区是需要做下拉加载的
+class HotGoods extends StatefulWidget {
+  @override
+  _HotGoodsState createState() => _HotGoodsState();
+}
+
+class _HotGoodsState extends State<HotGoods> {
+  @override
+    void initState() {
+      super.initState();
+      request('homePageBelowConten', 1).then((val) {
+        print(val);
+      });
+    }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text('hot goods'),
     );
   }
 }
