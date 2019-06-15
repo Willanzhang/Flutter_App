@@ -6,16 +6,19 @@ import './pages/index_page.dart';
 import 'package:provide/provide.dart';
 import './provide/counter.dart';
 import './provide/age.dart';
+import './provide/childCategory.dart';
 
 // 顶层注入
 void main(){
 	var counter = Counter();
+	var childCategory = ChildCategory();
 	var providers = Providers();
 	providers
 	// ..provide(Provider<Counter>.value(counter)) // 多个状态
 	// ..provide(Provider.function((context) => Age(2))) // 多个状态
 	..provide(Provider<Age>.value(Age(2)))
-	..provide(Provider<Counter>.value(counter));
+	..provide(Provider<Counter>.value(counter))
+	..provide(Provider<ChildCategory>.value(childCategory));
 	// runApp(new MyApp());
 	runApp(ProviderNode(child: MyApp(), providers: providers));
 }

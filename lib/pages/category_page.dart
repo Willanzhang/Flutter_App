@@ -5,6 +5,8 @@ import '../service/service_method.dart';
 import 'dart:convert';
 // 引入数据模型
 import '../model/category.dart';
+import 'package:provide/provide.dart';
+import '../provide/childCategory.dart';
 
 class CategoryPage extends StatefulWidget {
   @override
@@ -43,6 +45,7 @@ class LeftCategoryNav extends StatefulWidget {
 
 class _LeftCategoryNavState extends State<LeftCategoryNav> {
   List list = [];
+  var listIndex = 0;
 
   @override
   void initState() {
@@ -69,13 +72,21 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
   }
 
   Widget _leftInkWell(int index) {
+    bool isChick = false;
+    isChick = (index == listIndex) ? true : false;
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        setState(() {
+          listIndex = index;
+        });
+        var childList = list[index].bxMallSubDto;
+        Provide.value<ChildCategory>(context).getChildCategory(childList);
+      },
       child: Container(
         height: ScreenUtil().setHeight(100),
         padding: EdgeInsets.only(left: 10, top: 20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isChick? Colors.black26: Colors.white,
           border: Border(
             bottom: BorderSide(width: 1, color: Colors.black12)
           )
@@ -107,26 +118,20 @@ class RighCategoryNav extends StatefulWidget {
 }
 
 class _RighCategoryNavState extends State<RighCategoryNav> {
-  List list = ['名酒', '宝丰', '北京二锅头', '茅台', '五粮液', '剑南春', '舍得', '劲酒'];
 
-  Widget _rightInkWll(String item) {
+  // List list = ['名酒', '宝丰', '北京二锅头', '茅台', '五粮液', '剑南春', '舍得', '劲酒'];
+
+  Widget _rightInkWll(BxMallSubDto item) {
     return InkWell(
       onTap: () {},
       child: Container(
         padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            bottom: BorderSide(
-              width: 1,
-              color: Colors.black12
-            )
-          )
-        ),
-        child: Text(
-          item,
-          style: TextStyle(
-            fontSize: ScreenUtil().setSp(28)
+        child: Center(
+          child: Text(
+            item.mallSubName,
+            style: TextStyle(
+              fontSize: ScreenUtil().setSp(28)
+            ),
           ),
         ),
       ),
@@ -135,16 +140,29 @@ class _RighCategoryNavState extends State<RighCategoryNav> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: ScreenUtil().setHeight(80),
-      width: ScreenUtil().setWidth(570),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: list.length,
-        itemBuilder: (context, index) {
-          return _rightInkWll(list[index]);
-        },
-      ),
+    return Provide<ChildCategory>(
+      builder: (context, child, childCategory){
+        return Container(
+          height: ScreenUtil().setHeight(80),
+          width: ScreenUtil().setWidth(570),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              bottom: BorderSide(
+                width: 1,
+                color: Colors.black12
+              )
+            )
+          ),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: childCategory.childCategoryList.length,
+            itemBuilder: (context, index) {
+              return _rightInkWll(childCategory.childCategoryList[index]);
+            },
+          ),
+        );
+      },
     );
   }
 }
