@@ -21,7 +21,12 @@ class _CategoryPageState extends State<CategoryPage> {
       body: Container(
         child: Row(
           children: <Widget>[
-            LeftCategoryNav()
+            LeftCategoryNav(),
+            Column(
+              children: <Widget>[
+                RighCategoryNav()
+              ],
+            )
           ],
         ),
       ),
@@ -90,7 +95,56 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
       setState(() {
         list = category.data;
       });
-      category.data.forEach((item) => print(item.mallCategoryName));
+      // category.data.forEach((item) => print(item.mallCategoryName));
     });
+  }
+}
+
+// 右边的二级及内容
+class RighCategoryNav extends StatefulWidget {
+  @override
+  _RighCategoryNavState createState() => _RighCategoryNavState();
+}
+
+class _RighCategoryNavState extends State<RighCategoryNav> {
+  List list = ['名酒', '宝丰', '北京二锅头', '茅台', '五粮液', '剑南春', '舍得', '劲酒'];
+
+  Widget _rightInkWll(String item) {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            bottom: BorderSide(
+              width: 1,
+              color: Colors.black12
+            )
+          )
+        ),
+        child: Text(
+          item,
+          style: TextStyle(
+            fontSize: ScreenUtil().setSp(28)
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: ScreenUtil().setHeight(80),
+      width: ScreenUtil().setWidth(570),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          return _rightInkWll(list[index]);
+        },
+      ),
+    );
   }
 }

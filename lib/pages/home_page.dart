@@ -15,6 +15,7 @@ class HomePage extends StatefulWidget {
 	_HomePageState createState() => _HomePageState();
 }
 
+// 保存页面转态要混入 AutomaticKeepAliveClientMixin
 class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   int page = 1;
   List<Map> hotGoodsList = [];
