@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   int page = 1;
   List<Map> hotGoodsList = [];
 
+  GlobalKey<EasyRefreshState> _easyRefreshKey = new GlobalKey<EasyRefreshState>();
   //使用上拉加载必须需要一个footer的key
   GlobalKey<RefreshFooterState> _footerkey = new GlobalKey<RefreshFooterState>();
 
@@ -71,6 +72,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 						recommendList += recommendList;
 						// List swipter = [{'image': 'http://images.baixingliangfan.cn/advertesPicture/20190116/20190116173351_2085.jpg', 'goodsId': '6fe4fe0fb5394c0d9b9b4792a827e029'},{'image': 'http://images.baixingliangfan.cn/advertesPicture/20190116/20190116173351_2085.jpg', 'goodsId': '6fe4fe0fb5394c0d9b9b4792a827e029'}];
 						return EasyRefresh(
+              key: _easyRefreshKey,
               // 自定义样式
               refreshFooter: ClassicsFooter(
                 key: _footerkey,
@@ -82,7 +84,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                 moreInfo: '加载中',
                 loadReadyText: '上拉加载',
               ),
-
 						  child: ListView(
 						    	children: <Widget>[
 						    		SwiperDiy(swiperDateList:swipter),
@@ -264,6 +265,8 @@ class TopNavigator extends StatelessWidget {
 			height: ScreenUtil().setHeight(320),
 			padding: EdgeInsets.all(3.0),
 			child: GridView.count(
+        // 禁止回弹
+        physics: NeverScrollableScrollPhysics(),
 				// 每行设置的数
 				crossAxisCount: 5,
 				padding: EdgeInsets.all(5.0),

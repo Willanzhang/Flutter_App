@@ -13,12 +13,14 @@ Future request(String url, { formData }) async {
     Dio dio = new Dio();
     // io 中的 ContentType 使用 改变 contentType 
     dio.options.contentType = ContentType.parse('application/x-www-form-urlencoded');
+    print('==================> $formData');
     if (formData == null) {
       response = await dio.post(servicePath[url]);
     } else {
       response = await dio.post(servicePath[url], data: formData);
     }
     if (response.statusCode == 200) {
+      print('==================> ${response.data}');
       return response.data;
     } else {
       throw Exception('后端接口异常');
