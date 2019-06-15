@@ -6,9 +6,10 @@ import 'dart:convert';
 // 引入数据模型
 import '../model/category.dart';
 
-import '../model/categoryGoodsList.dart';
+import '../model/category_goodsList.dart';
 import 'package:provide/provide.dart';
-import '../provide/childCategory.dart';
+import '../provide/child_category.dart';
+import '../provide/category_goods_list.dart';
 
 class CategoryPage extends StatefulWidget {
 	@override
@@ -54,6 +55,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
 	void initState() {
 		// TODO: implement initState
 		_getCategory();
+		_getGoodsList();
 		super.initState();
 	}
 	@override
@@ -83,7 +85,9 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
 					listIndex = index;
 				});
 				var childList = list[index].bxMallSubDto;
+				var categoryId = list[index].mallCategoryId;
 				Provide.value<ChildCategory>(context).getChildCategory(childList);
+				_getGoodsList(categoryId: categoryId);
 			},
 			child: Container(
 				height: ScreenUtil().setHeight(100),
@@ -110,6 +114,21 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
 			});
 			Provide.value<ChildCategory>(context).getChildCategory(list[listIndex].bxMallSubDto);
 			// category.data.forEach((item) => print(item.mallCategoryName));
+		});
+	}
+	
+	// 获取右侧商品
+	void _getGoodsList({String categoryId}) async{
+		var data = {
+			'categoryId': categoryId == null? '4': categoryId,
+			'categorySubId': '',
+			'page': 1
+		};
+		await request('getMallGoods', formData: data).then((val){
+			var data = json.decode(val.toString());
+			CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(data);
+			Provide.value<CategoryGoodsListProvide>(context).getGoodsList(goodsList.data);
+			// print('分类商品列表----------------->${goodsList.data[0].goodsName}');
 		});
 	}
 }
@@ -180,57 +199,44 @@ class CategoryGoodsList extends StatefulWidget {
 // 商品列表， 可以实现上拉加载
 class _CategoryGoodsListState extends State<CategoryGoodsList> {
 
-	List list = [];
 	@override
 	void initState() {
-		_getGoodsList();
 		super.initState();
 	}
 	@override
 	Widget build(BuildContext context) {
-		return Container(
-			width: ScreenUtil().setWidth(570),
-			height: ScreenUtil().setHeight(1000),
-			child: ListView.builder(
-				itemCount: list.length,
-				itemBuilder: (context, index) {
-					return _ListItem(index);
-				},  
-			),
+		return Provide<CategoryGoodsListProvide>(
+			builder: (BuildContext context, child, data) {
+				return Container(
+					width: ScreenUtil().setWidth(570),
+					height: ScreenUtil().setHeight(1000),
+					child: ListView.builder(
+						itemCount: data.goodsList.length,
+						itemBuilder: (context, index) {
+							return _listItem(data.goodsList, index);
+						},  
+					),
+				);
+			},
 		);
 	}
 
-	void _getGoodsList() async{
-		var data = {
-			'categoryId': '4',
-			'categorySubId': '',
-			'page': 1
-		};
-		await request('getMallGoods', formData: data).then((val){
-			var data = json.decode(val.toString());
-			CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(data);
-			setState(() {
-				list = goodsList.data;
-			});
-			// print('分类商品列表----------------->${goodsList.data[0].goodsName}');
-		});
-	}
 
 	// 商品图片
-	Widget _goodsImage(int index) {
+	Widget _goodsImage(List newList,int index) {
 		return Container(
 			width: ScreenUtil().setWidth(200),
-			child: Image.network(list[index].image),
+			child: Image.network(newList[index].image),
 		);
 	}
 
 	// 商品名称
-	Widget _goodsName(int index) {
+	Widget _goodsName(List newList,int index) {
 		return Container(
 			padding: EdgeInsets.all(5.0),
 			width: ScreenUtil().setWidth(370),
 			child: Text(
-				list[index].goodsName,
+				newList[index].goodsName,
 				maxLines: 2,
 				overflow: TextOverflow.ellipsis,
 				style: TextStyle(fontSize: ScreenUtil().setSp(28)),
@@ -239,18 +245,18 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
 	}
 
 	// 商品价格
-	Widget _goodsPrice(int index) {
+	Widget _goodsPrice(List newList,int index) {
 		return Container(
 			width: ScreenUtil().setWidth(370),
 			margin: EdgeInsets.only(top: 20),
 			child: Row(
 				children: <Widget>[
 					Text(
-						'价格：￥${list[index].presentPrice}',
+						'价格：￥${newList[index].presentPrice}',
 						style: TextStyle(color: Colors.pink, fontSize: ScreenUtil().setSp(30)),
 					),
 					Text(
-						'价格：￥${list[index].oriPrice}',
+						'价格：￥${newList[index].oriPrice}',
 						style: TextStyle(color: Colors.black26, decoration: TextDecoration.lineThrough),
 					)
 				],
@@ -259,7 +265,7 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
 	}
 
 	// 组合右侧商品
-	Widget _ListItem(int index) {
+	Widget _listItem(List newList,int index) {
 		return InkWell(
 			onTap: () {},
 			child: Container(
@@ -273,11 +279,11 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
 				// color: Colors.white,
 				child: Row(
 					children: <Widget>[
-						_goodsImage(index),
+						_goodsImage(newList, index),
 						Column(
 							children: <Widget>[
-								_goodsName(index),
-								_goodsPrice(index)
+								_goodsName(newList, index),
+								_goodsPrice(newList, index)
 							],
 						)
 					],

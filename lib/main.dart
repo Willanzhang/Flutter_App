@@ -6,19 +6,22 @@ import './pages/index_page.dart';
 import 'package:provide/provide.dart';
 import './provide/counter.dart';
 import './provide/age.dart';
-import './provide/childCategory.dart';
+import './provide/child_category.dart';
+import './provide/category_goods_list.dart';
 
-// 顶层注入
+// 顶层注入 Provide
 void main(){
 	var counter = Counter();
 	var childCategory = ChildCategory();
+	var categoryGoodsListProvide = CategoryGoodsListProvide();
 	var providers = Providers();
 	providers
 	// ..provide(Provider<Counter>.value(counter)) // 多个状态
 	// ..provide(Provider.function((context) => Age(2))) // 多个状态
 	..provide(Provider<Age>.value(Age(2)))
 	..provide(Provider<Counter>.value(counter))
-	..provide(Provider<ChildCategory>.value(childCategory));
+	..provide(Provider<ChildCategory>.value(childCategory))
+	..provide(Provider<CategoryGoodsListProvide>.value(categoryGoodsListProvide));
 	// runApp(new MyApp());
 	runApp(ProviderNode(child: MyApp(), providers: providers));
 }
