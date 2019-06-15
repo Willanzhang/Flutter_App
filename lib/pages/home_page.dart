@@ -19,6 +19,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   int page = 1;
   List<Map> hotGoodsList = [];
 
+  //使用上拉加载必须需要一个footer的key
+  GlobalKey<RefreshFooterState> _footerkey = new GlobalKey<RefreshFooterState>();
+
 	@override
 	bool get wantKeepAlive => true;
 
@@ -37,7 +40,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     //     homePageContent = val.toString();
     //   });
     // });
-    _getHotGoods();
+    // _getHotGoods();
     super.initState();
   }
 
@@ -68,6 +71,18 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 						recommendList += recommendList;
 						// List swipter = [{'image': 'http://images.baixingliangfan.cn/advertesPicture/20190116/20190116173351_2085.jpg', 'goodsId': '6fe4fe0fb5394c0d9b9b4792a827e029'},{'image': 'http://images.baixingliangfan.cn/advertesPicture/20190116/20190116173351_2085.jpg', 'goodsId': '6fe4fe0fb5394c0d9b9b4792a827e029'}];
 						return EasyRefresh(
+              // 自定义样式
+              refreshFooter: ClassicsFooter(
+                key: _footerkey,
+                bgColor: Colors.white,
+                textColor: Colors.pink,
+                moreInfoColor: Colors.pink,
+                showMore: true,
+                noMoreText: '',
+                moreInfo: '加载中',
+                loadReadyText: '上拉加载',
+              ),
+
 						  child: ListView(
 						    	children: <Widget>[
 						    		SwiperDiy(swiperDateList:swipter),
@@ -84,6 +99,18 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                     _hotGoods(),
 						    	],
 						  ),
+              loadMore: ()async{
+                print('开始加载更过');
+                var formPage = {'page': page};
+                await request('homePageBelowConten', formData: formPage).then((val){
+                  var data = json.decode(val.toString());
+                  List<Map> newGoodsList = (data['data'] as List).cast();
+                  setState(() {
+                    hotGoodsList.addAll(newGoodsList);
+                    page++;
+                  });
+                });
+              },
 						);
 					} else {
 						return new Center(
