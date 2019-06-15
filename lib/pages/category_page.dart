@@ -86,7 +86,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
         height: ScreenUtil().setHeight(100),
         padding: EdgeInsets.only(left: 10, top: 20),
         decoration: BoxDecoration(
-          color: isChick? Colors.black26: Colors.white,
+          color: isChick? Color.fromRGBO(236, 236, 236, 1.0): Colors.white,
           border: Border(
             bottom: BorderSide(width: 1, color: Colors.black12)
           )
@@ -98,7 +98,6 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
 
 
   void _getCategory() async{
-    print('=======> 这里是第二个页面');
     await request('getCategory').then((val) {
       var data = json.decode(val.toString());
       CategoryModel category = CategoryModel.fromJson(data);
@@ -106,6 +105,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
       setState(() {
         list = category.data;
       });
+      Provide.value<ChildCategory>(context).getChildCategory(list[listIndex].bxMallSubDto);
       // category.data.forEach((item) => print(item.mallCategoryName));
     });
   }
