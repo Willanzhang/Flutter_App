@@ -21,34 +21,23 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   List<Map> hotGoodsList = [];
   bool flag = false;
 
-  GlobalKey<EasyRefreshState> _easyRefreshKey = new GlobalKey<EasyRefreshState>();
-  //使用上拉加载必须需要一个footer的key
-  GlobalKey<RefreshFooterState> _footerkey = new GlobalKey<RefreshFooterState>();
-
 	@override
 	bool get wantKeepAlive => true;
 
-	// @override
-	// void initState() {
-	// 	super.initState();
-	// }
-
-	String homePageContent = '正在获取数据...';
-	
 	@override
-  void initState() {
-    print('11111111111');
-    // request('homePageContext').then((val){
-    //   setState((){
-    //     homePageContent = val.toString();
-    //   });
-    // });
-    // _getHotGoods();
-    super.initState();
-  }
+	void initState() {
+		super.initState();
+	}
+
+  // GlobalKey<EasyRefreshState> _easyRefreshKey = new GlobalKey<EasyRefreshState>();
+  //使用上拉加载必须需要一个footer的key
+  GlobalKey<RefreshFooterState> _footerKey = new GlobalKey<RefreshFooterState>();
+
 
 	@override
 	Widget build(BuildContext context) {
+    // ???!!!! 这个是什么鬼
+    super.build(context);
     var formData = {'lon': '115.02932', 'lat': '35.73322'};
 		return Scaffold(
 			appBar: AppBar(title: Text('百姓生活+')),
@@ -71,13 +60,12 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
             List<Map> floor2 = (data['data']['floor2'] as List).cast();
             String floor3Title = data['data']['floor3Pic']['PICTURE_ADDRESS'];
             List<Map> floor3 = (data['data']['floor3'] as List).cast();
-						recommendList += recommendList;
 						// List swipter = [{'image': 'http://images.baixingliangfan.cn/advertesPicture/20190116/20190116173351_2085.jpg', 'goodsId': '6fe4fe0fb5394c0d9b9b4792a827e029'},{'image': 'http://images.baixingliangfan.cn/advertesPicture/20190116/20190116173351_2085.jpg', 'goodsId': '6fe4fe0fb5394c0d9b9b4792a827e029'}];
 						return EasyRefresh(
-              key: _easyRefreshKey,
+              // key: _easyRefreshKey,
               // 自定义样式
               refreshFooter: ClassicsFooter(
-                key: _footerkey,
+                key: _footerKey,
                 bgColor: Colors.white,
                 textColor: Colors.pink,
                 moreInfoColor: Colors.pink,
@@ -102,14 +90,14 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                     _hotGoods(),
 						    	],
 						  ),
-              loadMore: ()async{
+              loadMore: () async {
                 print('开始加载更过');
                 var formPage = {'page': page};
-                await request('homePageBelowConten', formData: formPage).then((val){
+                request('homePageBelowConten', formData: formPage).then((val){
                   var data = json.decode(val.toString());
                   List<Map> newGoodsList = (data['data'] as List).cast();
                   setState(() {
-                    flag: true;
+                    flag = true;
                     hotGoodsList.addAll(newGoodsList);
                     page++;
                   });
@@ -126,17 +114,18 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 			)
 		);
 	}
-  void _getHotGoods() {
-    var formPage = {'page': page};
-    request('homePageBelowConten', formData: formPage).then((val){
-      var data = json.decode(val.toString());
-      List<Map> newGoodsList = (data['data'] as List).cast();
-      setState(() {
-        hotGoodsList.addAll(newGoodsList);
-        page++;
-      });
-    });
-  }
+
+  // void _getHotGoods() {
+  //   var formPage = {'page': page};
+  //   request('homePageBelowConten', formData: formPage).then((val){
+  //     var data = json.decode(val.toString());
+  //     List<Map> newGoodsList = (data['data'] as List).cast();
+  //     setState(() {
+  //       hotGoodsList.addAll(newGoodsList);
+  //       page++;
+  //     });
+  //   });
+  // }
 
   Widget hotTitle = Container(
     margin: EdgeInsets.only(top:10.0),
@@ -149,57 +138,54 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   // 流式布局
   Widget _wrapList() {
-    if (flag == true) {
-      if (hotGoodsList.length != 0 ) {
-        // 流式布局需要 是list<>
-        List<Widget> listWidget = hotGoodsList.map((val){
-          return InkWell(
-            onTap: (){},
-            child: Container(
-              width: ScreenUtil().setWidth(372),
-              color: Colors.white,
-              padding: EdgeInsets.all(5.0),
-              margin: EdgeInsets.only(bottom: 3.0),
-              child: Column(
-                children: <Widget>[
-                  Image.network(val['image'], width: ScreenUtil().setWidth(370)),
-                  Text(
-                    val['name'],
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.pink,
-                      fontSize: ScreenUtil().setSp(26)
-                    ),
+    if (hotGoodsList.length != 0 ) {
+      // 流式布局需要 是list<>
+      List<Widget> listWidget = hotGoodsList.map((val){
+        return InkWell(
+          onTap: (){},
+          child: Container(
+            width: ScreenUtil().setWidth(372),
+            color: Colors.white,
+            padding: EdgeInsets.all(5.0),
+            margin: EdgeInsets.only(bottom: 3.0),
+            child: Column(
+              children: <Widget>[
+                Image.network(val['image'], width: ScreenUtil().setWidth(370)),
+                Text(
+                  val['name'],
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.pink,
+                    fontSize: ScreenUtil().setSp(26)
                   ),
-                  Row(
-                    children: <Widget>[
-                      Text('￥${val['mallPrice']}'),
-                      Text(
-                        "￥${val['price']}",
-                        style: TextStyle(
-                          color: Colors.black26,
-                          decoration: TextDecoration.lineThrough
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Text('￥${val['mallPrice']}'),
+                    Text(
+                      "￥${val['price']}",
+                      style: TextStyle(
+                        color: Colors.black26,
+                        decoration: TextDecoration.lineThrough
+                      ),
+                    )
+                  ],
+                )
+              ],
             ),
-          );
-        }).toList(); // !toList 最后还是要转化成列表
-        return Wrap(
-          // 流布局需要 几列
-          spacing: 2,
-          children: listWidget
+          ),
         );
-      } else {
-        return Text('还没有哦');
-      }
+      }).toList(); // !toList 最后还是要转化成列表
+      return Wrap(
+        // 流布局需要 几列
+        spacing: 2,
+        children: listWidget
+      );
     } else {
-      return Text('加载中..'); 
+      return Text('还没有哦');
     }
+
   }
 
   // 获取热销商品数据
