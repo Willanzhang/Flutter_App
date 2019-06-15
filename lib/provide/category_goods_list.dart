@@ -5,9 +5,14 @@ class CategoryGoodsListProvide with ChangeNotifier{
   List<CategoryListDate> goodsList = [];
 
   // 点击大类时更改商品列表
-
   getGoodsList(List<CategoryListDate> list) {
     goodsList = list;
+    notifyListeners();
+  }
+
+  
+  getMoreList(List<CategoryListDate> list) {
+    goodsList.addAll(list);
     notifyListeners();
   }
 }

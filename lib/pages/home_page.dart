@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   int page = 1;
   List<Map> hotGoodsList = [];
+  bool flag = false;
 
   GlobalKey<EasyRefreshState> _easyRefreshKey = new GlobalKey<EasyRefreshState>();
   //使用上拉加载必须需要一个footer的key
@@ -108,6 +109,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                   var data = json.decode(val.toString());
                   List<Map> newGoodsList = (data['data'] as List).cast();
                   setState(() {
+                    flag: true;
                     hotGoodsList.addAll(newGoodsList);
                     page++;
                   });
@@ -147,52 +149,56 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   // 流式布局
   Widget _wrapList() {
-    if (hotGoodsList.length != 0) {
-      // 流式布局需要 是list<>
-      List<Widget> listWidget = hotGoodsList.map((val){
-        return InkWell(
-          onTap: (){},
-          child: Container(
-            width: ScreenUtil().setWidth(372),
-            color: Colors.white,
-            padding: EdgeInsets.all(5.0),
-            margin: EdgeInsets.only(bottom: 3.0),
-            child: Column(
-              children: <Widget>[
-                Image.network(val['image'], width: ScreenUtil().setWidth(370)),
-                Text(
-                  val['name'],
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.pink,
-                    fontSize: ScreenUtil().setSp(26)
+    if (flag == true) {
+      if (hotGoodsList.length != 0 ) {
+        // 流式布局需要 是list<>
+        List<Widget> listWidget = hotGoodsList.map((val){
+          return InkWell(
+            onTap: (){},
+            child: Container(
+              width: ScreenUtil().setWidth(372),
+              color: Colors.white,
+              padding: EdgeInsets.all(5.0),
+              margin: EdgeInsets.only(bottom: 3.0),
+              child: Column(
+                children: <Widget>[
+                  Image.network(val['image'], width: ScreenUtil().setWidth(370)),
+                  Text(
+                    val['name'],
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.pink,
+                      fontSize: ScreenUtil().setSp(26)
+                    ),
                   ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Text('￥${val['mallPrice']}'),
-                    Text(
-                      "￥${val['price']}",
-                      style: TextStyle(
-                        color: Colors.black26,
-                        decoration: TextDecoration.lineThrough
-                      ),
-                    )
-                  ],
-                )
-              ],
+                  Row(
+                    children: <Widget>[
+                      Text('￥${val['mallPrice']}'),
+                      Text(
+                        "￥${val['price']}",
+                        style: TextStyle(
+                          color: Colors.black26,
+                          decoration: TextDecoration.lineThrough
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
+          );
+        }).toList(); // !toList 最后还是要转化成列表
+        return Wrap(
+          // 流布局需要 几列
+          spacing: 2,
+          children: listWidget
         );
-      }).toList(); // !toList 最后还是要转化成列表
-      return Wrap(
-        // 流布局需要 几列
-        spacing: 2,
-        children: listWidget
-      );
+      } else {
+        return Text('还没有哦');
+      }
     } else {
-      return Text('还没有哦');
+      return Text('加载中..'); 
     }
   }
 
