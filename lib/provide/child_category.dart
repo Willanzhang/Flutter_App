@@ -4,10 +4,13 @@ import '../model/category.dart';
 class ChildCategory with ChangeNotifier{
 	List<BxMallSubDto> childCategoryList = [];
   int childIndex = 0; // 二级导航高亮索引
+  String categoryId = '4'; // 大类id 默认4是白酒的
+
+  
 
   // 大类切换逻辑
-  getChildCategory(List<BxMallSubDto> list) {
-    
+  getChildCategory(List<BxMallSubDto> list, String id) {
+
     childIndex = 0;
     BxMallSubDto all = BxMallSubDto();
     all.mallSubId = '';

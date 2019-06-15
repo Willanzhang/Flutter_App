@@ -86,7 +86,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
 				});
 				var childList = list[index].bxMallSubDto;
 				var categoryId = list[index].mallCategoryId;
-				Provide.value<ChildCategory>(context).getChildCategory(childList);
+				Provide.value<ChildCategory>(context).getChildCategory(childList, categoryId);
 				_getGoodsList(categoryId: categoryId);
 			},
 			child: Container(
@@ -112,7 +112,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
 			setState(() {
 				list = category.data;
 			});
-			Provide.value<ChildCategory>(context).getChildCategory(list[listIndex].bxMallSubDto);
+			Provide.value<ChildCategory>(context).getChildCategory(list[listIndex].bxMallSubDto, list[listIndex].mallCategoryId);
 			// category.data.forEach((item) => print(item.mallCategoryName));
 		});
 	}
@@ -124,7 +124,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
 			'categorySubId': '',
 			'page': 1
 		};
-		await request('getMallGoods', formData: data).then((val){
+		request('getMallGoods', formData: data).then((val){
 			var data = json.decode(val.toString());
 			CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(data);
 			Provide.value<CategoryGoodsListProvide>(context).getGoodsList(goodsList.data);
@@ -150,6 +150,7 @@ class _RighCategoryNavState extends State<RighCategoryNav> {
 			onTap: () {
 				// Provide
 				Provide.value<ChildCategory>(context).changeChildIndex(index);
+				_getGoodsList(categorySubId:item.mallSubId);
 			},
 			child: Container(
 				padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
@@ -165,7 +166,20 @@ class _RighCategoryNavState extends State<RighCategoryNav> {
 			),
 		);
 	}
-
+		// 获取右侧商品数据
+	void _getGoodsList({String categorySubId}) async{
+		var data = {
+			'categoryId': Provide.value<ChildCategory>(context).categoryId,
+			'categorySubId': categorySubId,
+			'page': 1
+		};
+		request('getMallGoods', formData: data).then((val){
+			var data = json.decode(val.toString());
+			CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(data);
+			Provide.value<CategoryGoodsListProvide>(context).getGoodsList(goodsList.data);
+			// print('分类商品列表----------------->${goodsList.data[0].goodsName}');
+		});
+	}
 	@override
 	Widget build(BuildContext context) {
 		return Provide<ChildCategory>(
