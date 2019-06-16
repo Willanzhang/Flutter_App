@@ -225,7 +225,11 @@ class SwiperDiy extends StatelessWidget {
 			child: Swiper(
 				// itemBuilder 就是遍历 列表 渲染图像 当前页面显示才执行 itemBuilder
 				itemBuilder: (BuildContext context, int index) {
-					return Image.network('${swiperDateList[index]['image']}', fit:BoxFit.fill);
+					return InkWell(
+            onTap: () {
+              Application.router.navigateTo(context, '/detail?id=${swiperDateList[index]['goodsId']}');
+            },
+            child: Image.network('${swiperDateList[index]['image']}', fit:BoxFit.fill));
 				},
 				itemCount: swiperDateList.length,
 				pagination: SwiperPagination(),
@@ -341,9 +345,12 @@ class Recommend extends StatelessWidget {
 	}
 
 	// 商品单独项
-	Widget _item(index) {
+	Widget _item(context, index) {
 		return InkWell(
-			onTap: () {},
+			onTap: () {
+            Application.router.navigateTo(context, '/detail?id=${recommendList[index]['goodsId']}');
+
+      },
 			child: Container(
 				height: ScreenUtil().setHeight(360),
 				width: ScreenUtil().setWidth(250),
@@ -385,7 +392,7 @@ class Recommend extends StatelessWidget {
 				scrollDirection: Axis.horizontal,
 				itemCount: recommendList.length,
 				itemBuilder: (context, index) {
-					return _item(index);
+					return _item(context, index);
 				},
 			)
 		);
@@ -431,41 +438,43 @@ class FloorContext extends StatelessWidget {
     return Container(
       child: Column(
         children: <Widget>[
-          _fitstRow(),
-          _otherGoods()
+          _fitstRow(context),
+          _otherGoods(context)
         ],
       ),
     );
   }
 
-  Widget _fitstRow() {
+  Widget _fitstRow(context) {
     return Row(
       children: <Widget>[
-        _goodsItem(floorGoodsList[0]),
+        _goodsItem(context, floorGoodsList[0]),
         Column(
           children: <Widget>[
-            _goodsItem(floorGoodsList[1]),
-            _goodsItem(floorGoodsList[2]),
+            _goodsItem(context, floorGoodsList[1]),
+            _goodsItem(context, floorGoodsList[2]),
           ],
         )
       ],
     );
   }
 
-  Widget _otherGoods() {
+  Widget _otherGoods(context) {
     return Row(
       children: <Widget>[
-        _goodsItem(floorGoodsList[3]),
-        _goodsItem(floorGoodsList[4]),
+        _goodsItem(context, floorGoodsList[3]),
+        _goodsItem(context, floorGoodsList[4]),
       ],
     );
   }
 
-  Widget _goodsItem(Map goods) {
+  Widget _goodsItem(BuildContext context,Map goods) {
     return new Container(
       width: ScreenUtil().setWidth(375),
       child: InkWell(
-        onTap: () {print('店家商品');},
+        onTap: () {
+            Application.router.navigateTo(context, '/detail?id=${goods['goodsId']}');
+        },
         child: Image.network(goods['image']),
       ),
     );
