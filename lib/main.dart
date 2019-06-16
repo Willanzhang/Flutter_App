@@ -10,6 +10,7 @@ import './provide/child_category.dart';
 import './provide/category_goods_list.dart';
 
 import 'package:oktoast/oktoast.dart';
+import 'package:fluro/fluro.dart';
 
 // 顶层注入 Provide
 void main(){
@@ -17,6 +18,8 @@ void main(){
 	var childCategory = ChildCategory();
 	var categoryGoodsListProvide = CategoryGoodsListProvide();
 	var providers = Providers();
+	final router = Router();
+
 	providers
 	// ..provide(Provider<Counter>.value(counter)) // 多个状态
 	// ..provide(Provider.function((context) => Age(2))) // 多个状态
