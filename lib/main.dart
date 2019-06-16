@@ -9,6 +9,8 @@ import './provide/age.dart';
 import './provide/child_category.dart';
 import './provide/category_goods_list.dart';
 
+import 'package:oktoast/oktoast.dart';
+
 // 顶层注入 Provide
 void main(){
 	var counter = Counter();
@@ -44,14 +46,16 @@ class MyApp extends StatelessWidget {
 		//     ),
 		//   ),
 		// );
-		return new MaterialApp(
-			title: 'Startup Name Genertor',
-			theme: new ThemeData(
-				primaryColor: Colors.red,
-			),
-			// home: new RandomWords(),
-			// home: new MyScaffold(),
-			home: new IndexPage(),
+		return OKToast(
+		  child: new MaterialApp(
+		  	title: 'Startup Name Genertor',
+		  	theme: new ThemeData(
+		  		primaryColor: Colors.red,
+		  	),
+		  	// home: new RandomWords(),
+		  	// home: new MyScaffold(),
+		  	home: new IndexPage(),
+		  ),
 		);
 	}
 }
