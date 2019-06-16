@@ -8,6 +8,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 // 上拉加载
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import '../routers/application.dart';
+
 
 class HomePage extends StatefulWidget {
   
@@ -32,7 +34,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   // GlobalKey<EasyRefreshState> _easyRefreshKey = new GlobalKey<EasyRefreshState>();
   //使用上拉加载必须需要一个footer的key
   GlobalKey<RefreshFooterState> _footerKey = new GlobalKey<RefreshFooterState>();
-
 
 	@override
 	Widget build(BuildContext context) {
@@ -142,7 +143,11 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       // 流式布局需要 是list<>
       List<Widget> listWidget = hotGoodsList.map((val){
         return InkWell(
-          onTap: (){},
+          onTap: (){
+            // 路由跳转 带参数
+            Application.router.navigateTo(context, '/detail?id=${val['goodsId']}');
+            // Router().navigateTo(context, '/detail?id=${val['goodsId']}');  无效
+          },
           child: Container(
             width: ScreenUtil().setWidth(372),
             color: Colors.white,

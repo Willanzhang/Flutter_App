@@ -3,9 +3,9 @@ import 'package:fluro/fluro.dart';
 import '../pages/details_page.dart';
 
 Handler detailsHandler = Handler(
-  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    String goodsId = params['id'].first;
-    print('index > details goodsId is $goodsId');
-    return DetailsPage(goodsId);
-  }
+	handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+		String goodsId = params['id'].first;
+		// print('index > details goodsId is $params');
+		return DetailsPage(goodsId);
+	}
 );
