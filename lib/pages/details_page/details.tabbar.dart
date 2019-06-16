@@ -42,7 +42,7 @@ class DetailsTabbar extends StatelessWidget {
         ),
         child: Text(
           '详情',
-          style: TextStyle(color: isLeft? Colors.pink:Colors.black12),
+          style: TextStyle(color: isLeft? Colors.pink:Colors.black54),
         ),
       ),
     );
@@ -68,7 +68,7 @@ class DetailsTabbar extends StatelessWidget {
         ),
         child: Text(
           '评论',
-          style: TextStyle(color: isRight? Colors.pink:Colors.black12),
+          style: TextStyle(color: isRight? Colors.pink:Colors.black54),
         ),
       ),
     );
