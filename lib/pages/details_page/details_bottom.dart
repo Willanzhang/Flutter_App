@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
-// import 'package:provide/provide.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import '../../provide/detail_info.dart';
+import 'package:provide/provide.dart';
+import '../../provide/cart.dart';
+import '../../provide/detail_info.dart';
 
 class DeatilsBottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    var goodsInfo = Provide.value<DetailInfoProvide>(context).goodsInfo.data.goodInfo;
+    var goodsId = goodsInfo.goodsId;
+    var goodsName = goodsInfo.goodsName;
+    var count = 1;
+    var price = goodsInfo.presentPrice;
+    var images = goodsInfo.image1;
     return Container(
       width: ScreenUtil().setWidth(750),
       color: Colors.white,
@@ -13,7 +21,8 @@ class DeatilsBottom extends StatelessWidget {
       child: Row(
         children: <Widget>[
           InkWell(
-            onTap: () {
+            onTap: () async {
+              
             },
             child: Container(
               width: ScreenUtil().setWidth(110),
@@ -26,7 +35,9 @@ class DeatilsBottom extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () {
+            onTap: () async {
+              print('點擊購買');
+              await Provide.value<CartProvide>(context).save(goodsId, goodsName, count, price, images);
             },
             child: Container(
               width: ScreenUtil().setWidth(320),
@@ -40,7 +51,9 @@ class DeatilsBottom extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () {
+            onTap: () async {
+              print('清空購物車---');
+              await Provide.value<CartProvide>(context).remove();
             },
             child: Container(
               width: ScreenUtil().setWidth(320),
