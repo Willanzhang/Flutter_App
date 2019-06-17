@@ -12,7 +12,6 @@ class CartProvide with ChangeNotifier {
 
   save(goodsId, goodsName, count, price, images) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     await getCartInfo();
     // 获取购物车信息
     cartString = prefs.getString('cartInfo');
@@ -21,6 +20,8 @@ class CartProvide with ChangeNotifier {
     bool isHave = false;
     int ival = 0;
 
+    allPrize = 0;
+    allGoodsCount = 0;
     // 判断是否存在 存在就增加数量， 否则添加进持久化数据中
     tempList.forEach((item){
       if (item['goodsId'] == goodsId) {
@@ -29,6 +30,12 @@ class CartProvide with ChangeNotifier {
           cartList[ival].count =item['count'] + count;
         // }
         isHave = true;
+      }
+      if (item['isCheck']) {
+        allPrize += (cartList[ival].price * cartList[ival].count);
+        allGoodsCount += cartList[ival].count;
+        // allPrize += (item['count'] * item['price']);
+        // allGoodsCount += item['count'];
       }
       ival++;
     });
@@ -43,6 +50,9 @@ class CartProvide with ChangeNotifier {
       };
       tempList.add(newGoods);
       cartList.add(CartInfoModel.fromJson(newGoods));
+
+      allPrize += (count * price);
+      allGoodsCount += count;
     }
     cartString = json.encode(tempList).toString();
     print('--------------------->$cartString');
@@ -53,6 +63,8 @@ class CartProvide with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('cartInfo');
     cartList = [];
+    allPrize = 0;
+    allGoodsCount = 0;
     notifyListeners();
   }
 
