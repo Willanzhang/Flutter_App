@@ -135,4 +135,28 @@ class CartProvide with ChangeNotifier {
     prefs.setString('cartInfo', cartString);
     await getCartInfo();
   }
+
+  // 商品数量加减
+  addOrReduceAction(CartInfoModel cartItem, String todu) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    cartString = prefs.getString('cartInfo');
+    List<Map> tempList = (json.decode(cartString.toString()) as List).cast();
+    int tempIndex = 0;
+    int changeIndex = 0;
+    tempList.forEach((item) {
+      if (item['goodsId'] == cartItem.goodsId) {
+        changeIndex = tempIndex;
+      }
+      tempIndex++;
+    });
+    if (todu == 'add') {
+      cartItem.count++;
+    } else if (todu == 'reduce' && cartItem.count > 1) {
+      cartItem.count--;
+    }
+    tempList[changeIndex] = cartItem.toJson(); // model 转化为 Map 
+    cartString = json.encode(tempList).toString(); //变成字符串 注意toString的执行位置！！！
+    prefs.setString('cartInfo', cartString); //进行持久化
+    await getCartInfo(); //重新读取列表
+  }
 }
