@@ -16,15 +16,20 @@ class CartPage extends StatelessWidget {
 				future: _getCartInfo(context),
 				builder: (context, snapshot){
 					if (snapshot.hasData) {
-						List cartList = Provide.value<CartProvide>(context).cartList;
+						// List cartList = Provide.value<CartProvide>(context).cartList;
 						return Stack(
 							children: <Widget>[
-								ListView.builder(
-									itemCount: cartList.length,
-									itemBuilder: (context, index){
-										return CartItem(cartList[index]);
-									},
-								),
+                Provide<CartProvide>(
+                  builder: (context, child, val) {
+                    List cartList = Provide.value<CartProvide>(context).cartList;
+                    return ListView.builder(
+                      itemCount: cartList.length,
+                      itemBuilder: (context, index){
+                        return CartItem(cartList[index]);
+                      },
+                    );
+                  },
+                ),
 								// 定位父元素有点不是很清楚
 								Positioned(
 									bottom: 0,
