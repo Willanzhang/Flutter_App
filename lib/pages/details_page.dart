@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../provide/detail_info.dart';
 import './details_page/details_top_area.dart';
 import './details_page/details_explain.dart';
@@ -31,12 +32,16 @@ class DetailsPage extends StatelessWidget {
             return Stack(
 							children: <Widget>[
                 Container(
+                  // margin: EdgeInsets.only(bottom: 80),
                   child: ListView(
                     children: <Widget>[
                       DetailsTopArea(),
                       DetailsExplain(),
                       DetailsTabbar(),
                       DetailsWeb(),
+                      Container(
+                        height: ScreenUtil().setHeight(80),
+                      )
                     ],
                   ),
                 ),
