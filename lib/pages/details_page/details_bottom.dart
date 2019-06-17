@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
 import '../../provide/cart.dart';
 import '../../provide/detail_info.dart';
+import '../../provide/currentIndex.dart';
 
 class DeatilsBottom extends StatelessWidget {
   @override
@@ -22,7 +23,8 @@ class DeatilsBottom extends StatelessWidget {
         children: <Widget>[
           InkWell(
             onTap: () async {
-              
+              Provide.value<CurrentIndexProvide>(context).changeIndex(2);
+              Navigator.pop(context);
             },
             child: Container(
               width: ScreenUtil().setWidth(110),
