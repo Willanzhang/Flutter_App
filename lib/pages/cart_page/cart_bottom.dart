@@ -105,4 +105,5 @@ class CartBottom extends StatelessWidget {
 			)
 		);
 	}
+
 }
