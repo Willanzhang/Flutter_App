@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../model/cartInfo.dart';
 
 class CartCount extends StatelessWidget {
+  // final CartInfoModel item;
+  // CartCount(this.item);
+
   @override
   Widget build(BuildContext context) {
     return Container(

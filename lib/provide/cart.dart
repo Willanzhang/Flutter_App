@@ -8,6 +8,7 @@ class CartProvide with ChangeNotifier {
   List<CartInfoModel> cartList=[];
   int allGoodsCount = 0; // 商品总数量
   double allPrize = 0; // 总价格
+  bool isAllCheck = true; // 是否全选
 
   save(goodsId, goodsName, count, price, images) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -55,7 +56,7 @@ class CartProvide with ChangeNotifier {
     notifyListeners();
   }
 
-  // 这种就可以将上面
+  // 这种就是进入的时候将持久化的数据绑定在 provide上
   getCartInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     cartString = prefs.getString('cartInfo');
@@ -66,10 +67,13 @@ class CartProvide with ChangeNotifier {
       List<Map> tempList = (json.decode(cartString.toString()) as List).cast();
       allGoodsCount = 0;
       allPrize = 0;
+      isAllCheck = true;
       tempList.forEach((item){
         if (item['isCheck']) {
           allPrize += (item['count'] * item['price']);
           allGoodsCount += item['count'];
+        } else {
+          isAllCheck = false;
         }
         cartList.add(CartInfoModel.fromJson(item));
       });
@@ -93,6 +97,41 @@ class CartProvide with ChangeNotifier {
 
     tempList.removeAt(delIndex);
     cartString = json.encode(tempList).toString();
+    prefs.setString('cartInfo', cartString);
+    await getCartInfo();
+  }
+
+  // 改变选中状态
+  changeCheckState(CartInfoModel cartItem) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    cartString = prefs.getString('cartInfo');
+    List<Map> tempList = (json.decode(cartString.toString()) as List).cast();
+    int tempIndex = 0;
+    int changeIndex = 0;
+    tempList.forEach((item) {
+      if (item['goodsId'] == cartItem.goodsId) {
+        changeIndex = tempIndex;
+      }
+      tempIndex++;
+    });
+    tempList[changeIndex] = cartItem.toJson(); // model 转化为 Map 
+    cartString = json.encode(tempList).toString(); //变成字符串 注意toString的执行位置！！！
+    prefs.setString('cartInfo', cartString); //进行持久化
+    await getCartInfo(); //重新读取列表
+  }
+
+  // 点击全选按钮操作
+  changeAllCheck(bool isCheck) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    cartString = prefs.getString('cartInfo');
+    List<Map> tempList = (json.decode(cartString.toString()) as List).cast();
+    List<Map> newList = [];
+    for(var item in tempList) {
+      var newItem = item;
+      newItem['isCheck'] = isCheck;
+      newList.add(newItem);
+    }
+    cartString = json.encode(newList).toString();
     prefs.setString('cartInfo', cartString);
     await getCartInfo();
   }

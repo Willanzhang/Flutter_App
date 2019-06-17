@@ -41,7 +41,10 @@ class CartItem extends StatelessWidget {
         value: item.isCheck,
         activeColor: Colors.pink,
         onChanged: (bool val) {
-
+          // 这里只是改变ui界面  真正改变数值的是 Provide 的方法
+          item.isCheck = val;
+          print('--->>>>>>>>>>>>>>>>>>>>>>复选');
+          Provide.value<CartProvide>(context).changeCheckState(item);
         },
       ),
     );
