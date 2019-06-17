@@ -18,6 +18,7 @@ class CartPage extends StatelessWidget {
 					if (snapshot.hasData) {
 						// List cartList = Provide.value<CartProvide>(context).cartList;
 						return Stack(
+              alignment: Alignment.center,
 							children: <Widget>[
                 Provide<CartProvide>(
                   builder: (context, child, val) {
@@ -35,7 +36,7 @@ class CartPage extends StatelessWidget {
 									bottom: 0,
 									left: 0,
 									child: CartBottom(),
-								)
+								),
 							],
 							// pos
 							// CartBottom
