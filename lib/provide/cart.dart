@@ -12,7 +12,7 @@ class CartProvide with ChangeNotifier {
 
   save(goodsId, goodsName, count, price, images) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await getCartInfo();
+    // await getCartInfo();
     // 获取购物车信息
     cartString = prefs.getString('cartInfo');
     var temp = cartString == null ? []:json.decode(cartString.toString());
@@ -32,10 +32,10 @@ class CartProvide with ChangeNotifier {
         isHave = true;
       }
       if (item['isCheck']) {
-        allPrize += (cartList[ival].price * cartList[ival].count);
-        allGoodsCount += cartList[ival].count;
-        // allPrize += (item['count'] * item['price']);
-        // allGoodsCount += item['count'];
+        // allPrize += (cartList[ival].price * cartList[ival].count);
+        // allGoodsCount += cartList[ival].count;
+        allPrize += (item['count'] * item['price']);
+        allGoodsCount += item['count'];
       }
       ival++;
     });
@@ -57,6 +57,7 @@ class CartProvide with ChangeNotifier {
     cartString = json.encode(tempList).toString();
     print('--------------------->$cartString');
     prefs.setString('cartInfo', cartString);
+    notifyListeners();
   }
 
   remove() async {
